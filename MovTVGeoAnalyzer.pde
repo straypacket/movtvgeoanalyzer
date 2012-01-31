@@ -33,7 +33,7 @@ public void setup() {
 private void loadGeoData() {
   movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
-    msql.query( "SELECT * FROM reports WHERE uid LIKE '393e8135d97013da9d37f9d0900995f1e473a528' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 10" );
+    msql.query( "SELECT * FROM reports WHERE uid LIKE '393e8135d97013da9d37f9d0900995f1e473a528' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 100" );
     while ( msql.next() ){
       println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getLong("timestamp") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );
@@ -78,7 +78,12 @@ public void draw() {
 
 private void drawMarker(float x, float y, long s) {
   noStroke();
-  fill(200, 200, 0, 100);
+  if (s == 0) {
+    fill(255, 0, 0, 200);
+  }
+  else{
+    fill(200, 200, 0, 100);
+  }
   ellipse(x, y, 16, 16);
   fill(255, 100);
   ellipse(x, y, 14, 14);
