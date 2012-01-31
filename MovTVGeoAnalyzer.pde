@@ -7,7 +7,6 @@ import de.bezier.data.sql.*;
 
 de.fhpotsdam.unfolding.Map map;
 MySQL msql;
-int stackPosition;
 
 List<Location> movTVGeoLocations = new ArrayList<Location>();
 
@@ -26,18 +25,16 @@ public void setup() {
   smooth();
   
   map = new de.fhpotsdam.unfolding.Map(this);
-  map.zoomToLevel(8);
+  map.zoomToLevel(12);
   map.panTo(new Location(-33.45,-70.6666));
   MapUtils.createDefaultEventDispatcher(this, map);
-  
-  stackPosition = 0;
 }
 
 private void loadGeoData() {
   if ( msql.connect() ) {
     msql.query( "SELECT * FROM reports WHERE uid LIKE '393e8135d97013da9d37f9d0900995f1e473a528' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 10" );
     while ( msql.next() ){
-      //println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getLong("timestamp") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
+      println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getLong("timestamp") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );
     }
   }
@@ -52,26 +49,32 @@ public void draw() {
   background(0);
   map.draw();
 
-  long sequence = 0;
+  int sequence = 0;
+  noFill();
+  stroke(#5679C1);
+  strokeWeight(1);
+  beginShape();
+  for (Location location : movTVGeoLocations) {
+    float xy[] = map.getScreenPositionFromLocation(location);
+    vertex(xy[0], xy[1]);
+  }
+  endShape();
+  
   for (Location location : movTVGeoLocations) {
     float xy[] = map.getScreenPositionFromLocation(location);
     drawMarker(xy[0], xy[1], sequence);
     sequence += 1;
-    if (sequence >= stackPosition){
-      break;
+    
+    if (dist(mouseX, mouseY, xy[0], xy[1]) < 3) {
+      strokeWeight(10);
+      point(xy[0], xy[1]);
+      fill(0);
+      textSize(10);
+      textAlign(CENTER);
+      text(nf(sequence,0,0),xy[0], xy[1]-8);
+      println(sequence);
     }
   }
-  stackPosition += 1;
-  if (stackPosition >= movTVGeoLocations.size()) {
-    // Finished animation
-    //noLoop();
-    stackPosition = 0;
-  }
-}
-
-public void mousePressed() {
-  redraw();
-  //loop();
 }
 
 private void drawMarker(float x, float y, long s) {
@@ -84,6 +87,4 @@ private void drawMarker(float x, float y, long s) {
   ellipse(x, y, 12, 12);
   fill(255, 200);
   ellipse(x, y, 10, 10);
-  //fill(0);
-  //text(String.valueOf(s), x-8, y-8);
 }
