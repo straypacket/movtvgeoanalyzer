@@ -11,6 +11,10 @@ MySQL msql;
 List<Location> movTVGeoLocations = new ArrayList<Location>();
 
 public void setup() {
+  // setup graphics
+  size(1024, 768, GLConstants.GLGRAPHICS);
+  smooth();
+  
   // setup db
   String user     = "skillup";
   String pass     = "skillup";
@@ -19,10 +23,6 @@ public void setup() {
   // get data
   msql = new MySQL( this, "192.168.4.108", database, user, pass );
   loadGeoData();
-    
-  // setup graphics
-  size(1024, 768, GLConstants.GLGRAPHICS);
-  smooth();
   
   map = new de.fhpotsdam.unfolding.Map(this);
   map.zoomToLevel(12);
@@ -31,6 +31,7 @@ public void setup() {
 }
 
 private void loadGeoData() {
+  movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
     msql.query( "SELECT * FROM reports WHERE uid LIKE '393e8135d97013da9d37f9d0900995f1e473a528' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 10" );
     while ( msql.next() ){
@@ -41,7 +42,6 @@ private void loadGeoData() {
   else {
     println( "db connection failed!" );
   }
-  
   println("size: " + movTVGeoLocations.size());
 }
 
@@ -72,7 +72,6 @@ public void draw() {
       textSize(10);
       textAlign(CENTER);
       text(nf(sequence,0,0),xy[0], xy[1]-8);
-      println(sequence);
     }
   }
 }
