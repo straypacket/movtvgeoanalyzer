@@ -64,14 +64,14 @@ public void draw() {
   stackPosition += 1;
   if (stackPosition >= movTVGeoLocations.size()) {
     // Finished animation
-    noLoop();
+    //noLoop();
     stackPosition = 0;
   }
 }
 
 public void mousePressed() {
   redraw();
-  loop();
+  //loop();
 }
 
 private void drawMarker(float x, float y, long s) {
