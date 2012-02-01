@@ -80,6 +80,7 @@ def extract_loop()
 		splitline = ""
 		whiteline = 0
 		timestamp = ""
+		pec = false
 
 		log.each_line do |line|
 			# Pre-parser
@@ -104,7 +105,7 @@ def extract_loop()
 				# Here we get server date and time
 				# This information is in lines that start with the "Processing " string.
 				# Some of the lines have "to json{p} ", "to html ", "to uliza " or none of those strings, so we get rid of them
-				if /^Processing / =~ subline
+				if /^Processing EngineController/ =~ subline
 					split_array = subline.gsub("to jsonp ","").gsub("to json ","").gsub("to html","").gsub("to uliza ","").split(" ")
 					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 				end
