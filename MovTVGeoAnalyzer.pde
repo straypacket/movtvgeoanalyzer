@@ -9,6 +9,8 @@ de.fhpotsdam.unfolding.Map map;
 MySQL msql;
 
 List<Location> movTVGeoLocations = new ArrayList<Location>();
+List<String> movTVGeoDate = new ArrayList<String>();
+List<Long> movTVGeoTimestamp = new ArrayList<Long>();
 
 public void setup() {
   // setup graphics
@@ -33,10 +35,12 @@ public void setup() {
 private void loadGeoData() {
   movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
-    msql.query( "SELECT * FROM reports WHERE uid LIKE '393e8135d97013da9d37f9d0900995f1e473a528' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 100" );
+    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '5eedd0514bbc4c2c7b77903f13dbf95f4693638f' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 100" );
     while ( msql.next() ){
-      println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getLong("timestamp") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
+      //println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getString("date") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );
+      movTVGeoDate.add( msql.getString("date") );
+      movTVGeoTimestamp.add( msql.getLong("timestamp") );
     }
   }
   else {
@@ -53,16 +57,32 @@ public void draw() {
   noFill();
   stroke(#5679C1);
   strokeWeight(1);
+  String geoTime;
+  Long prevTS=0L;
+  
   beginShape();
   for (Location location : movTVGeoLocations) {
+    if (sequence > 0){
+      prevTS = movTVGeoTimestamp.get(sequence);
+    }
+
+    if ( sequence+1 < movTVGeoTimestamp.size() ) {
+      if ( movTVGeoTimestamp.get(sequence+1) - prevTS > 1000000 ) {
+        endShape();
+        beginShape();
+      }
+    }
     float xy[] = map.getScreenPositionFromLocation(location);
     vertex(xy[0], xy[1]);
+    sequence += 1;
   }
   endShape();
   
+  sequence = 0;
   for (Location location : movTVGeoLocations) {
     float xy[] = map.getScreenPositionFromLocation(location);
     drawMarker(xy[0], xy[1], sequence);
+    geoTime = (String) movTVGeoDate.get(sequence);
     sequence += 1;
     
     if (dist(mouseX, mouseY, xy[0], xy[1]) < 3) {
@@ -71,7 +91,7 @@ public void draw() {
       fill(0);
       textSize(10);
       textAlign(CENTER);
-      text(nf(sequence,0,0),xy[0], xy[1]-8);
+      text(geoTime,xy[0], xy[1]-8);
     }
   }
 }
