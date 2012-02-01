@@ -1,4 +1,8 @@
 !#/usb/bin/ruby
+###
+# Typical command line:
+# for I in /Volumes/IO-Data_1/app*/production.log.*; do echo $I ; ruby1.9 qori_log_extractor.rb $I ; done
+###
 require 'file/tail'
 require 'mysql'
 require 'ostruct'
@@ -99,9 +103,9 @@ def extract_loop()
 
 				# Here we get server date and time
 				# This information is in lines that start with the "Processing " string.
-				# Some of the lines have "to jsonp ", "to html " or none of those strings, so we get rid of them
+				# Some of the lines have "to json{p} ", "to html ", "to uliza " or none of those strings, so we get rid of them
 				if /^Processing / =~ subline
-					split_array = subline.gsub("to jsonp ","").gsub("to html","").split(" ")
+					split_array = subline.gsub("to jsonp ","").gsub("to json ","").gsub("to html","").gsub("to uliza ","").split(" ")
 					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 				end
 
@@ -126,7 +130,7 @@ def extract_loop()
 					end
 
 					# write into db
-					db_write(uid,event,timestamp,split_geo_array[1],split_geo_array[2])
+					#db_write(uid,event,timestamp,split_geo_array[1],split_geo_array[2])
 				end
 			end
 		end
