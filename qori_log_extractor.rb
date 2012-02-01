@@ -3,6 +3,7 @@ require 'file/tail'
 require 'mysql'
 require 'ostruct'
 require 'zlib'
+require 'date'
 
 CONFIG = OpenStruct.new
 CONFIG.host = ENV['MYSQL_HOST'] || '192.168.4.108'
@@ -71,33 +72,66 @@ def extract_loop()
 		#log.interval = 10
 		#log.backward(1000000)
 		#log.tail do |line|
+		concatLine = ""
+		splitline = ""
+		whiteline = 0
+		timestamp = ""
+
 		log.each_line do |line|
-			# regexp
-			if /200.*.geolocation=/ =~ line
-				split_array = line.split("&")
+			# Pre-parser
+			# This initial code will group all lines until two empty lines are found
 
-				# process line
-				uid = split_array[1].split("=")[1]
-				event = split_array[3].split("=")[1]
-				timestamp = split_array[5].split("=")[1]
-				split_geo_array = split_array[7].tr("=",";").split(";")
+			concatLine += line
+			whiteline+=1 if /^\n/ =~ line
+			
+			next if whiteline < 2
+			whiteline = 0
 
-				# check if we have geo data
-				# if not, either use the GeoIP or throw the data out
-				next if split_geo_array[1] == '0.0' or split_geo_array[2] == '0.0'
+			# We get rid of the two empty lines, in the end of the concatenated string
+			concatLine.strip!
 
-				# fix nasty client code from the iOS app
-				# this is due to the use of signed integers when unsigned integers should be used
-				if timestamp.to_i < 0
-					timestamp = (2**31 + timestamp.to_i).to_s
+			# And we split the concatenated string back into three separated lines
+			splitline = concatLine.split("\n")
+			concatLine = ""
+
+			# Now we process each group of three lines
+			splitline.each do |subline|
+
+				# Here we get server date and time
+				# This information is in lines that start with the "Processing " string.
+				# Some of the lines have "to jsonp ", "to html " or none of those strings, so we get rid of them
+				if /^Processing / =~ subline
+					split_array = subline.gsub("to jsonp ","").gsub("to html","").split(" ")
+					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 				end
 
-				# write into db
-				db_write(uid,event,timestamp,split_geo_array[1],split_geo_array[2])
+				# Typically, the second and third lines have all the juice
+				# Here we chose the third lines that have the 200 code and geolocation info
+				if /200.*.geolocation=/ =~ subline
+					split_array = subline.split("&")
+
+					# process line
+					uid = split_array[1].split("=")[1]
+					event = split_array[3].split("=")[1]
+					split_geo_array = split_array[7].tr("=",";").split(";")
+
+					# check if we have geo data
+					# if not, either use the GeoIP or throw the data out
+					next if split_geo_array[1] == '0.0' or split_geo_array[2] == '0.0'
+
+					# fix nasty client code from the iOS app
+					# this is due to the use of signed integers when unsigned integers should be used
+					if timestamp.to_i < 0
+						timestamp = (2**31 + timestamp.to_i).to_s
+					end
+
+					# write into db
+					#db_write(uid,event,timestamp,split_geo_array[1],split_geo_array[2])
+				end
 			end
 		end
 	rescue Exception => e
-		puts "poop "+e.to_s
+		puts "poop!\n"+e.to_s
 	end
 end
 
