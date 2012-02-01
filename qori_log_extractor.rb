@@ -130,7 +130,7 @@ def extract_loop()
 					end
 
 					# write into db
-					#db_write(uid,event,timestamp,split_geo_array[1],split_geo_array[2])
+					db_write(uid,event,timestamp,split_geo_array[1],split_geo_array[2])
 				end
 			end
 		end
