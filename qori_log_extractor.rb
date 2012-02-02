@@ -108,7 +108,7 @@ def extract_loop()
 				# Some of the lines have "to json{p} ", "to html ", "to uliza " or none of those strings, so we get rid of them
 				if /^Processing EngineController/ =~ subline
 					# Get rid of all the "to X" in these lines
-					split_array = subline.gsub(/ to [^\W]+ \(/," (").split(" ")
+					split_array = subline.gsub(/EngineController#[\w]+ [\w]+.*.\(+?/,"EngineController# (").split(" ")
 					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 				end
 
