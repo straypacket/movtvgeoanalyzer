@@ -108,7 +108,7 @@ def extract_loop()
 				# Some of the lines have "to json{p} ", "to html ", "to uliza " or none of those strings, so we get rid of them
 				if /^Processing EngineController/ =~ subline
 					# Get rid of all the "to X" in these lines
-					split_array = subline.gsub(/ to [^\W]+ \(/," (")
+					split_array = subline.gsub(/ to [^\W]+ \(/," (").split(" ")
 					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 				end
 
@@ -124,6 +124,8 @@ def extract_loop()
 
 					# check if we have geo data
 					# if not, either use the GeoIP or throw the data out
+					next if split_geo_array[1] == nil or split_geo_array[2] == nil
+					next if split_geo_array[1].empty? or split_geo_array[2].empty?
 					next if split_geo_array[1] == '0.0' or split_geo_array[2] == '0.0'
 
 					# fix nasty client code from the iOS app
