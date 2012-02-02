@@ -80,6 +80,7 @@ def extract_loop()
 		splitline = ""
 		whiteline = 0
 		timestamp = ""
+		split_array = ""
 		pec = false
 
 		log.each_line do |line|
@@ -87,7 +88,7 @@ def extract_loop()
 			# This initial code will group all lines until two empty lines are found
 
 			concatLine += line
-			whiteline+=1 if /^\n/ =~ line
+			whiteline += 1 if /^\n/ =~ line
 			
 			next if whiteline < 2
 			whiteline = 0
@@ -102,16 +103,16 @@ def extract_loop()
 			# Now we process each group of three lines
 			splitline.each do |subline|
 
-				# Here we get server date and time
+				# Here we get the server date and time
 				# This information is in lines that start with the "Processing " string.
 				# Some of the lines have "to json{p} ", "to html ", "to uliza " or none of those strings, so we get rid of them
 				if /^Processing EngineController/ =~ subline
-					split_array = subline.gsub("to jsonp ","").gsub("to json ","").gsub("to html","").gsub("to uliza ","").split(" ")
+					split_array = subline.gsub("to jsonp ","").gsub("to json ","").gsub("to html","").gsub("to bak ","").gsub("to old ","").gsub("to uliza ","").split(" ")
 					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 				end
 
 				# Typically, the second and third lines have all the juice
-				# Here we chose the third lines that have the 200 code and geolocation info
+				# Here we chose every third line that have the 200 code and geolocation info
 				if /200.*.geolocation=/ =~ subline
 					split_array = subline.split("&")
 
