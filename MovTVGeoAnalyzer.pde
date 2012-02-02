@@ -7,6 +7,7 @@ import de.bezier.data.sql.*;
 
 de.fhpotsdam.unfolding.Map map;
 MySQL msql;
+int jump = 0;
 
 List<Location> movTVGeoLocations = new ArrayList<Location>();
 List<String> movTVGeoDate = new ArrayList<String>();
@@ -15,6 +16,7 @@ List<Long> movTVGeoTimestamp = new ArrayList<Long>();
 public void setup() {
   // setup graphics
   size(1024, 768, GLConstants.GLGRAPHICS);
+  colorMode(HSB, 100);
   smooth();
   
   // setup db
@@ -55,10 +57,12 @@ public void draw() {
 
   int sequence = 0;
   noFill();
-  stroke(#5679C1);
   strokeWeight(1);
   String geoTime;
   Long prevTS=0L;
+  int h=0;
+  int segs=0;
+  int thresh = 100000;
   
   beginShape();
   for (Location location : movTVGeoLocations) {
@@ -67,16 +71,26 @@ public void draw() {
     }
 
     if ( sequence+1 < movTVGeoTimestamp.size() ) {
-      if ( movTVGeoTimestamp.get(sequence+1) - prevTS > 1000000 ) {
+      if ( movTVGeoTimestamp.get(sequence+1) - prevTS > thresh ) {
         endShape();
+        stroke(h, 100, 100);
+        h+=jump;
+        segs+=1;
         beginShape();
       }
     }
+    
     float xy[] = map.getScreenPositionFromLocation(location);
     vertex(xy[0], xy[1]);
     sequence += 1;
   }
   endShape();
+  
+  if (jump == 0) {
+    jump = (int) 100/segs;
+    println("Segments: "+segs);
+    println ("Updated jump to: "+jump);
+  }
   
   sequence = 0;
   for (Location location : movTVGeoLocations) {
@@ -99,16 +113,17 @@ public void draw() {
 private void drawMarker(float x, float y, long s) {
   noStroke();
   if (s == 0) {
-    fill(255, 0, 0, 200);
+    fill(0, 100, 100, 100);
   }
   else{
-    fill(200, 200, 0, 100);
+    fill(60, 100, 78, 100);
   }
   ellipse(x, y, 16, 16);
-  fill(255, 100);
+  fill(0, 0, 100, 100);
   ellipse(x, y, 14, 14);
-  fill(200, 200, 0, 100);
+  fill(60, 100, 78, 50);
   ellipse(x, y, 12, 12);
-  fill(255, 200);
+  fill(0, 0, 100, 100);
   ellipse(x, y, 10, 10);
+  stroke(HSB,100);
 }
