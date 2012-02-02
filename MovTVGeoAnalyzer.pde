@@ -62,7 +62,8 @@ public void draw() {
   Long prevTS=0L;
   int h=0;
   int segs=0;
-  int thresh = 100000;
+  int thresh = 60*60*24;
+  //int thresh = 10000;
   
   beginShape();
   for (Location location : movTVGeoLocations) {
@@ -113,17 +114,24 @@ public void draw() {
 private void drawMarker(float x, float y, long s) {
   noStroke();
   if (s == 0) {
-    fill(0, 100, 100, 100);
+    fill(0, 0, 0, 50);
+    ellipse(x, y, 16, 16);
+    fill(0, 100, 100, 50);
+    ellipse(x, y, 14, 14);
+    fill(0, 0, 0, 50);
+    ellipse(x, y, 12, 12);
+    fill(0, 100, 100, 50);
+    ellipse(x, y, 10, 10);
   }
   else{
-    fill(60, 100, 78, 100);
+    fill(0, 0, 0, 50);
+    ellipse(x, y, 16, 16);
+    fill(0, 0, 100, 100);
+    ellipse(x, y, 14, 14);
+    fill(0, 0, 0, 100);
+    ellipse(x, y, 12, 12);
+    fill(0, 0, 100, 100);
+    ellipse(x, y, 10, 10);
   }
-  ellipse(x, y, 16, 16);
-  fill(0, 0, 100, 100);
-  ellipse(x, y, 14, 14);
-  fill(60, 100, 78, 50);
-  ellipse(x, y, 12, 12);
-  fill(0, 0, 100, 100);
-  ellipse(x, y, 10, 10);
   stroke(HSB,100);
 }
