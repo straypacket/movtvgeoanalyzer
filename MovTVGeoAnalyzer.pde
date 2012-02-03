@@ -64,6 +64,11 @@ public void draw() {
   int thresh = 60*60*24/4;
   //int thresh = 10000;
   
+  if (mouseButton == CENTER) {
+    println("ZOOOOOOOOOOOOOOOM!");
+    //repositionPoint();
+  }
+  
   beginShape();
   for (Location location : movTVGeoLocations) {
     if (sequence > 0){
@@ -158,12 +163,23 @@ public void keyPressed() {
 }
 
 public void mouseDragged(){
+  repositionPoint();
+}
+
+public void mousePressed(){
   seq.pause();
-  seq = new AniSequence(this);
+}
+
+public void mouseReleased(){
+  println("Resuming at position: "+ seq.getTime());
+  seq.resume();
+}
+
+private void repositionPoint(){
   float pos = seq.getSeek();
+  seq = new AniSequence(this);
   pointWalk();
   seq.seek(pos);
-  seq.start();
 }
 
 private void drawMarker(float x, float y, long s) {
