@@ -91,7 +91,7 @@ for (i in 1:length(statements)) {
 					# Twitter
 					#Uctx <- getURL(paste("http://search.twitter.com/search.json?q=@foursquare&geocode=",clusCenter[2],",",clusCenter[1],"0.50km&rpp=100&result_type=recent", sep=""))
 					# Facebook
-					#Uctx <- getURL(paste("https://graph.facebook.com/search?type=location&center=",clusCenter[2],",",clusCenter[1],"&distance=1000&access_token=AAAAAAITEghMBAC1t4hU54qR4lTKVTdTXQ7OlZAGfWlRRK5FdZCrAlhrNYhksK0Fr71IlDtP9xMLZCLXRf0aPWHNGJl3EKBpNgFsPZBNszAZDZD", sep=""))
+					#Uctx <- getURL(paste("https://graph.facebook.com/search?q=%20&type=place&center=",clusCenter[2],",",clusCenter[1],"&distance=1000&access_token=AAAAAAITEghMBAC1t4hU54qR4lTKVTdTXQ7OlZAGfWlRRK5FdZCrAlhrNYhksK0Fr71IlDtP9xMLZCLXRf0aPWHNGJl3EKBpNgFsPZBNszAZDZD", sep=""))
 					
 					# Convert JSON to R-object
 					Rctx <- fromJSON(Uctx,method = "C")
