@@ -41,7 +41,8 @@ def db_setup()
     rescue Mysql::Error => e
     	puts "Table does not exist, creating ..."
     	begin
-    		@conn.query("create table reports (id INT(40) NOT NULL UNIQUE AUTO_INCREMENT, uid VARCHAR(40), event VARCHAR (20), timestamp INT UNSIGNED, timeofday TIME, longitude FLOAT, latitude FLOAT, PRIMARY KEY (id) )")
+    		@conn.query("create table reports (id INT(40) NOT NULL UNIQUE AUTO_INCREMENT, uid VARCHAR(40), event VARCHAR (20), timestamp INT UNSIGNED, timeofday TIME, dayofweek INT UNSIGNED, longitude FLOAT, latitude FLOAT, PRIMARY KEY (id) )")
+    		@conn.query("create table usercluster (id INT(40) NOT NULL UNIQUE AUTO_INCREMENT, uid VARCHAR(40), context VARCHAR(40), update_timestamp INT UNSIGNED, timeofday TIME, dayofweek INT UNSIGNED, longitude FLOAT, latitude FLOAT, PRIMARY KEY (id) )")
     		puts "Done!"
     	rescue Mysql::Error => e
     		puts "Error creating new table: "+e.to_s
@@ -50,9 +51,9 @@ def db_setup()
 
 end
 
-def db_write(uid, event, timestamp, timeofday, long, lat)
+def db_write(uid, event, timestamp, timeofday, dayofweek, long, lat)
 	begin
-		query = "INSERT INTO reports VALUES (NULL, '#{uid}', '#{event}', #{timestamp}, '#{timeofday}', #{long}, #{lat})"
+		query = "INSERT INTO reports VALUES (NULL, '#{uid}', '#{event}', #{timestamp}, '#{timeofday}', '#{dayofweek}', #{long}, #{lat})"
 		#p query
 		@conn.query(query)
 	rescue Mysql::Error => e
@@ -81,6 +82,7 @@ def extract_loop()
 		whiteline = 0
 		timestamp = ""
 		timeofday = ""
+		dayofweek = ""
 		split_array = ""
 		pec = false
 
@@ -113,6 +115,7 @@ def extract_loop()
 					timestamp = DateTime.strptime(split_array[5]+" "+split_array[6],"%Y-%m-%d %H:%M:%S)").to_time.to_i
 					temp_tod = DateTime.parse(split_array[5]+" "+split_array[6].chop+"UTC+09:00")
 					timeofday = temp_tod.new_offset('UTC-04:00').strftime('%H:%M:%S')
+					dayofweek = temp_tod.new_offset('UTC-04:00').strftime('%w')
 				end
 
 				# Typically, the second and third lines have all the juice
@@ -138,7 +141,7 @@ def extract_loop()
 					end
 
 					# write into db
-					db_write(uid,event,timestamp,timeofday,split_geo_array[1],split_geo_array[2])
+					db_write(uid,event,timestamp,timeofday,dayofweek,split_geo_array[1],split_geo_array[2])
 				end
 			end
 		end
