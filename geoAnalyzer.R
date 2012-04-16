@@ -10,16 +10,37 @@ library("RCurl")
 library("rjson")
 library("gtools")
 
+crawler <- function(tree, name, d) {
+	treeArray[tree$shortName] <<- name
+	c <- length(tree$categories)
+	if (c) {
+		for (i in 1:c) {
+			tree$categories[[i]]$shortName
+			crawler(tree$categories[[i]], name)
+		}
+	}
+}
+
 # Setup graphs
 lay <- layout(matrix(1:10, ncol=2, byrow=FALSE))
 #op <- par(mar=rep(1,4), ask = FALSE)
 
+radius <- 750
 uid <- "'5eedd0514bbc4c2c7b77903f13dbf95f4693638f'"
 density <- c(0.025)
 timingWD <- c('WD 6-8','WD 8-10','WD 10-12','WD 12-14','WD 14-16','WD 16-18','WD 18-20','WD 20-22','WD 22-24','WD 0-2','WD 2-6')
 timingWE <- c('WE 6-8','WE 8-10','WE 10-12','WE 12-14','WE 14-16','WE 16-18','WE 18-20','WE 20-22','WE 22-24','WE 0-2','WE 2-6')
 tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
 statements <- {}
+
+# Build Foursquare tree
+FSCats <- getURL("https://api.foursquare.com/v2/venues/categories?oauth_token=ADB02WREAK4W4R5BDYBVEXHWB14VZM4TQOIWZCYAD1GY22EK")
+FSTree <- fromJSON(FSCats, method = "C")
+treeArray <- {}
+
+for (sc in 1:length(FSTree$response$categories)) {
+	crawler(FSTree$response$categories[[sc]], FSTree$response$categories[[sc]]$shortName)
+}
 
 for (t in 1:(length(tod)/2)) {
 	statements <- append(statements, paste(
@@ -87,28 +108,51 @@ for (i in 1:length(statements)) {
 
 					# Fetch context
 					# Foursquare
-					Uctx <- getURL(paste("https://api.foursquare.com/v2/venues/search?ll=",clusCenter[2],",",clusCenter[1],"&oauth_token=ADB02WREAK4W4R5BDYBVEXHWB14VZM4TQOIWZCYAD1GY22EK&v=20120410&radius=80&intent=browse", sep=""))
+					Uctx <- getURL(paste("https://api.foursquare.com/v2/venues/search?ll=",clusCenter[2],",",clusCenter[1],"&oauth_token=ADB02WREAK4W4R5BDYBVEXHWB14VZM4TQOIWZCYAD1GY22EK&v=20120410&radius=",radius,"&intent=browse", sep=""))
 					# Twitter
 					#Uctx <- getURL(paste("http://search.twitter.com/search.json?q=@foursquare&geocode=",clusCenter[2],",",clusCenter[1],"0.50km&rpp=100&result_type=recent", sep=""))
-					# Facebook
-					#Uctx <- getURL(paste("https://graph.facebook.com/search?q=%20&type=place&center=",clusCenter[2],",",clusCenter[1],"&distance=1000&access_token=AAAAAAITEghMBAC1t4hU54qR4lTKVTdTXQ7OlZAGfWlRRK5FdZCrAlhrNYhksK0Fr71IlDtP9xMLZCLXRf0aPWHNGJl3EKBpNgFsPZBNszAZDZD", sep=""))
-					
+					# Facebook + NLP
+					#https://graph.facebook.com/search?q=ofi&type=place&center=-33.39,-70.5466333333333&distance=250&access_token=AAAAAAITEghMBANyEQtKaNcp4BIJBPTixFR3dtNySpOvlFaYRZCnlL9ZBtn7ILYszpZB4OJGGhLYsqgxVaapFlF3uvZBzFxV7cXGbdkej0wZDZD
+					#https://graph.facebook.com/search?q=rest&type=place&center=-33.39,-70.5466333333333&distance=250&access_token=AAAAAAITEghMBANyEQtKaNcp4BIJBPTixFR3dtNySpOvlFaYRZCnlL9ZBtn7ILYszpZB4OJGGhLYsqgxVaapFlF3uvZBzFxV7cXGbdkej0wZDZD
+					#https://graph.facebook.com/search?q=casa&type=place&center=-33.39,-70.5466333333333&distance=250&access_token=AAAAAAITEghMBANyEQtKaNcp4BIJBPTixFR3dtNySpOvlFaYRZCnlL9ZBtn7ILYszpZB4OJGGhLYsqgxVaapFlF3uvZBzFxV7cXGbdkej0wZDZD
+
 					# Convert JSON to R-object
 					Rctx <- fromJSON(Uctx,method = "C")
 
 					# Parse context
 					ctx <- {}
+					venue <- {}
+					finalvenue <- {}
+					venue[""] = 0
 					if (length(Rctx$response$venues)) {
 						for (v in 1:length(Rctx$response$venues)) {
 							if(length(Rctx$response$venues[[v]]$categories)) {
-								ctx <- append( ctx, paste(Rctx$response$venues[[v]]$location$distance,Rctx$response$venues[[v]]$categories[[1]]$shortName,Rctx$response$venues[[v]]$name) )
+								cat <- treeArray[Rctx$response$venues[[v]]$categories[[1]]$shortName]
+								dist <- Rctx$response$venues[[v]]$location$distance
+								if (dist < radius) {
+									ctx <- append( ctx, paste(dist,cat,Rctx$response$venues[[v]]$name) )
+									if(is.na(venue[cat])){
+										venue[cat] <- 1
+									}
+									else {
+										venue[cat] <- venue[cat] + 1
+									}
+								}
+							}
+						}
+
+						for (fv in 1:length(venue)){
+							if(venue[fv] >= 1){
+								finalvenue <- append(finalvenue, venue[fv])
 							}
 						}
 
 						# Infer context
-						print(paste(timingWD[i], "density", density[den], "cluster", c, "with", length(x[d$cluster==1])/2, "elements"))
-						sortedctx <- mixedsort(ctx)
-						print(sortedctx)
+						print(paste(timingWD[i], "density: ", density[den], " cluster: ", c, " with ", length(finalvenue), " elements @ ", clusCenter[2], "," ,clusCenter[1], sep=""))
+						#sortedctx <- mixedsort(ctx)
+						#print(sortedctx)
+						sortedvenues<- mixedsort(finalvenue)
+						print(tail(sortedvenues,2))
 					}
 				}
 			}
