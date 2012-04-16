@@ -105,7 +105,7 @@ for (i in 1:length(statements)) {
 		###
 		hc <- hclust(dist(x), "ave")
 		#hc <- hclust(dist(x)^2, "ave")
-		plot(hc, main="Hierachical cluster dendrogram")
+		plot(hc, main="Hierarchical cluster dendrogram")
 		###
 		# Fanny (fuzzy logic, k=K)
 		###
