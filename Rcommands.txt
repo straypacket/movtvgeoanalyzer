@@ -1,0 +1,17 @@
+Cluster validation:
+library(fpc)
+cluster.stats(dist(x), d$cluster)
+
+
+Better graphs:
+library(ggplot2)
+ggplot(subset(frame, clus > 0), aes(x=x, y=y)) + geom_point(aes(shape = factor(clus)),, size = 4) + scale_shape(solid = FALSE) + stat_bin2d(bins = 25, colour="grey50") + geom_smooth()
+
+Graphs by cluster ID
+frame <- data.frame(x=datax,y=datay,clus=d$cluster)
+ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text()
+ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text() + stat_density2d(geom="density2d")
+ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d() + geom_point(stat="unique")
+ggplot(frame, aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d() + geom_point(stat="unique")
+ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d(aes(fill = ..level..), geom="polygon") + geom_point(stat="unique")
+ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + stat_bin2d(binwidth = c(0.005, 0.005)) + geom_text(hjust=0, vjust=0) + geom_point(stat="unique")
