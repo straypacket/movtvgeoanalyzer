@@ -1,0 +1,495 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"cv",
+				"cvg_counter"
+			],
+			[
+				"sor",
+				"sortedctx"
+			],
+			[
+				"clu",
+				"clusCenter"
+			],
+			[
+				"den",
+				"density"
+			],
+			[
+				"da",
+				"datay"
+			],
+			[
+				"data",
+				"datax"
+			],
+			[
+				"FU",
+				"Fuzzy-logic"
+			],
+			[
+				"tim",
+				"timeofday"
+			],
+			[
+				"time",
+				"timeofday"
+			],
+			[
+				"dir",
+				"dirObserver"
+			],
+			[
+				"event",
+				"events"
+			],
+			[
+				"sub",
+				"subline"
+			],
+			[
+				"gsu",
+				"gsub"
+			],
+			[
+				"date",
+				"datetime"
+			],
+			[
+				"spl",
+				"split_array"
+			],
+			[
+				"whi",
+				"whiteline"
+			],
+			[
+				"sp",
+				"split_geo_array"
+			],
+			[
+				"res",
+				"rescue"
+			],
+			[
+				"gz",
+				"GzipReader"
+			],
+			[
+				"fi",
+				"file"
+			],
+			[
+				"to",
+				"to_s"
+			],
+			[
+				"split",
+				"split_array"
+			],
+			[
+				"ext",
+				"extract_loop"
+			],
+			[
+				"db",
+				"db_write"
+			],
+			[
+				"File",
+				"File	File.open(\"..\") { |file| .. }"
+			],
+			[
+				"on",
+				"on_created"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "geoAnalyzer.R",
+			"settings":
+			{
+				"buffer_size": 5873,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "geoAnalyzerAll.R",
+			"settings":
+			{
+				"buffer_size": 4878,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "geoAnalyzerMinPTSDensityTime.R",
+			"settings":
+			{
+				"buffer_size": 5611,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "geoAnalyzerMinPTSTime.R",
+			"settings":
+			{
+				"buffer_size": 4685,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "geoAnalyzerDensityTime.R",
+			"settings":
+			{
+				"buffer_size": 4351,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "geoAnalyzerDensityTimeWE.R",
+			"settings":
+			{
+				"buffer_size": 2844,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "qori_log_extractor.rb",
+			"settings":
+			{
+				"buffer_size": 4869,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				":w",
+				":w - Save"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/gsc/Documents/Processing/MovTVGeoAnalyzer/geoAnalyzerDensity.R",
+		"/Users/gsc/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/gsc/Desktop/ctg.html",
+		"/Users/gsc/Desktop/ad_h.html",
+		"/Users/gsc/Desktop/ad_l.html",
+		"/Users/gsc/geoAnalyzer.R",
+		"/Users/gsc/Desktop/SujBox/main.pyw",
+		"/Users/gsc/Desktop/SujBox/uploadMonitor.py",
+		"/Users/gsc/SujBoxClient/setup_win.py",
+		"/Users/gsc/Desktop/lustre_working_conf.rtf"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "geoAnalyzer.R",
+					"settings":
+					{
+						"buffer_size": 5873,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3768,
+								3774
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1604.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "geoAnalyzerAll.R",
+					"settings":
+					{
+						"buffer_size": 4878,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2263,
+								2263
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1003.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "geoAnalyzerMinPTSDensityTime.R",
+					"settings":
+					{
+						"buffer_size": 5611,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4509,
+								4509
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1769.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "geoAnalyzerMinPTSTime.R",
+					"settings":
+					{
+						"buffer_size": 4685,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 625.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "geoAnalyzerDensityTime.R",
+					"settings":
+					{
+						"buffer_size": 4351,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1943,
+								1966
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "geoAnalyzerDensityTimeWE.R",
+					"settings":
+					{
+						"buffer_size": 2844,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								387,
+								406
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "qori_log_extractor.rb",
+					"settings":
+					{
+						"buffer_size": 4869,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2328,
+								2328
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}
