@@ -22,6 +22,18 @@ public void setup() {
   colorMode(HSB, 100);
   smooth();
   
+  // grab middle button
+  addMouseWheelListener(new java.awt.event.MouseWheelListener() { 
+    public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+      // This gets done before the maps zooms out, therefore it is nearly useless
+      // Need to concoct a way to make this run run after the map gets zoomed
+      seq.pause();
+      //repositionPoint();
+      //seq.resume();
+      //println("zoooooooooooooooooom!!");
+    }
+  }); 
+  
   // setup animation
   Ani.init(this);
   seq = new AniSequence(this);
@@ -36,7 +48,7 @@ public void setup() {
   String database = "qori_analyzer";
 
   // get data
-  msql = new MySQL( this, "192.168.4.108", database, user, pass );
+  msql = new MySQL( this, "192.168.12.37", database, user, pass );
   loadGeoData();
   
   map = new de.fhpotsdam.unfolding.Map(this);
@@ -46,6 +58,7 @@ public void setup() {
   
   // make animation
   pointWalk();
+  
   // start animation
   seq.start();
 }
@@ -63,11 +76,6 @@ public void draw() {
   int segs=0;
   int thresh = 60*60*24/4;
   //int thresh = 10000;
-  
-  if (mouseButton == CENTER) {
-    println("ZOOOOOOOOOOOOOOOM!");
-    //repositionPoint();
-  }
   
   beginShape();
   for (Location location : movTVGeoLocations) {
@@ -120,9 +128,43 @@ public void draw() {
 }
 
 private void loadGeoData() {
+  //Christian
+  String uid = "5eedd0514bbc4c2c7b77903f13dbf95f4693638f";
+  //Nico
+  //String uid = "b0195e18ee9244b78b25d2bf438afd4311041f50";
+  //Flight attendant
+  //String uid = "6401578e8592675605a79d8e6f79c79dd1383b2c";
+  //Chino
+  //String uid = "ba7ece3b98db0b8df018ae9e0e84f332bb19a4ee";
+  //Luis (4S)
+  //String uid = "6f01a0f212db893eca84e8ced20a81b44798031f";
+  //Luis (3GS)
+  //String uid = "fa556bbcd8b22d340f92173b121e3ce3e81cafc2";
+  //Teppei?
+  //String uid = "84b1ccf1d56bf0e70fe2720a623eec7c90b59441";
+  //Daniel
+  //String uid = "0f25716871b389a9700d3be2f0abd465608281fa";
+  //Swedish
+  //String uid = "9bce63fa4ec360f9f9ecc93a5632574d2cf6888f";
+  //Chilean-Mexican
+  //String uid = "716a273bc78882f53e8b1ce8c69653c515e80065";
+  //Spanish
+  //String uid = "503fd8681433cbef13a9dbf0b8b273ea03c44698";
+  //Another Swedish!
+  //String uid = "908a0affbd759fc5ad340b663973e52bef26c448";
+  //Yet another swedish!
+  //String uid = "dbdb64678bee6c8f4502af54ef3c3fa68b24614e";
+  //American
+  //String uid = "45045A0A-FCF9-5733-86EC-98D4BBC363D4";
+  //La Serena/Coquimbo
+  //String uid = "9e7456ac8a9b3d0bd6026df1f18965c2e5d0db46";
+  //Coquimbo/Calama
+  //String uid = "6401578e8592675605a79d8e6f79c79dd1383b2c";
+  
   movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
-    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '5eedd0514bbc4c2c7b77903f13dbf95f4693638f' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 100" );
+    //msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 100" );
+    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' group by longitude, latitude ORDER BY timestamp ASC LIMIT 500" );
     while ( msql.next() ){
       //println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getString("date") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );
@@ -141,7 +183,7 @@ private void pointWalk() {
   for (Location location : movTVGeoLocations) {
     float xy[] = map.getScreenPositionFromLocation(location);
     //seq.beginStep();
-    seq.add(Ani.to(this, 0.5, "x:"+xy[0]+",y:"+xy[1]));
+    seq.add(Ani.to(this, 0.85, "x:"+xy[0]+",y:"+xy[1]));
     //seq.endStep();
   }
   seq.endSequence();
@@ -160,23 +202,32 @@ public void keyPressed() {
     if (seq.isPlaying()) seq.pause();
     else seq.resume();
   }
+  if (key == 'r' || key == 'R') {
+    seq.pause();
+    repositionPoint();
+    seq.resume();
+  }
 }
 
 public void mouseDragged(){
+  println("drag");
   repositionPoint();
 }
 
 public void mousePressed(){
+  println("press");
   seq.pause();
 }
 
 public void mouseReleased(){
-  println("Resuming at position: "+ seq.getTime());
+  println("release");
+  repositionPoint();
   seq.resume();
 }
 
 private void repositionPoint(){
   float pos = seq.getSeek();
+  println("Repositioning to "+pos);
   seq = new AniSequence(this);
   pointWalk();
   seq.seek(pos);

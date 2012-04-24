@@ -2,6 +2,7 @@ library('RMySQL')
 library('fpc')
 library('mclust')
 library('edci')
+library('fpc')
 require("geneplotter")
 require("RColorBrewer")
 require("class")
@@ -15,10 +16,13 @@ require("hdrcde")
 lay <- layout(matrix(1:50, ncol=10, byrow=FALSE))
 #op <- par(mar=rep(1,4), ask = FALSE)
 
-uid <- "'6f01a0f212db893eca84e8ced20a81b44798031f'"
-density <- c(0.025, 0.05, 0.075, 0.1, 0.25)
+uid <- "'5eedd0514bbc4c2c7b77903f13dbf95f4693638f'"
+density <- c(0.005, 0.010, 0.025, 0.05, 0.075)
+#density <- c(0.025, 0.05, 0.075, 0.1, 0.25)
 timing <- c('WD 6-8','WD 8-10','WD 10-12','WD 12-14','WD 14-16','WD 16-18','WD 18-20','WD 20-22','WD 22-24','WD 0-2','WD 2-6')
+#timing <- c('WD 12-14','WD 14-16','WD 16-18','WD 18-20','WD 20-22')
 tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
+#tod <- array(c(12,14,14,16,16,18,18,20,20,22),c(2,5))
 statements <- {}
 
 for (t in 1:(length(tod)/2)) {
@@ -35,6 +39,8 @@ for (t in 1:(length(tod)/2)) {
 }
 
 conn <- {}
+cv <- array(list(),c(500,4))
+acounter <- 1
 for (i in 1:length(statements)) {
 		# Setup graphs
 
@@ -73,7 +79,7 @@ for (i in 1:length(statements)) {
 			# safe
 			#d <- dbscan(x,eps=0.1, MinPts=5, scale=1);
 			d <- dbscan(x,eps=density[den], MinPts=5, scale=1, method="raw");
-			#plot(d,x, main=paste(timing[i],"density",density[den]), ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+			plot(d,x, main=paste(timing[i],"density",density[den]), ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 			#plot(x[d$cluster %in% 1:10,], main=timing[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 			# Santiago + Vina del mar
 			#plot(d, x, main=timing[i], ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))
@@ -85,9 +91,46 @@ for (i in 1:length(statements)) {
 			# Kantou
 			#plot(d, x, main=paste(timing[i],"density",density[den]), xlim = c(139.7, 140.2), ylim = c(35.6, 36.1))
 			# Tokyo
-			plot(d, x, main=paste(timing[i],"density",density[den]), xlim = c(139.7, 139.85), ylim = c(35.6, 35.8))
+			#plot(d, x, main=paste(timing[i],"density",density[den]), xlim = c(139.7, 139.85), ylim = c(35.6, 35.8))
+
+			if (max(d$cluster)) {
+
+				if (max(d$cluster) > 1){
+					frame <- subset(data.frame(x=datax,y=datay,clus=d$cluster), clus>0)
+					currval <- cluster.stats(dist(subset(frame, select=x:y)), unlist(subset(frame, select=clus), use.names=FALSE), G2=TRUE,G3=TRUE)
+					currval$density <- density[den]
+					currval$timeslot <- timing[i]
+					currval$nozero <- TRUE
+					cv[[acounter,4]] <- currval
+					cv[[acounter,1]] <- timing[i]
+					cv[[acounter,2]] <- density[den]
+					cv[[acounter,3]] <- "NoZero"
+					acounter <<- acounter + 1
+				}
+				else{
+					currval <- cluster.stats(dist(x), d$cluster)
+					currval$density <- density[den]
+					currval$timeslot <- timing[i]
+					currval$nozero <- FALSE
+					cv[[acounter,4]] <- currval
+					cv[[acounter,1]] <- timing[i]
+					cv[[acounter,2]] <- density[den]
+					cv[[acounter,3]] <- "Zero"
+					acounter <<- acounter + 1
+				}
+			}
 		}
 	}
-	#dev.copy2pdf(device="png", file=paste("./density",density[1],"-",density[length(density)],".png"), width=1920, height=1080, bg="white")
+}
 
+# Cluster Analyze/graph:
+# Perhaps use cluster cohesion. It's impossible to compute
+# without the outliers (cluster 0) when there's only one cluster
+for (time in 1:length(timing)) {
+	for (row in 1:nrow(cv)) {
+		if (!is.null(cv[row,][[1]]) && cv[row,][[3]] == "NoZero" && cv[row,][[1]] == timing[time]) {
+			print(paste(cv[row,][[1]], cv[row,][[2]], cv[row,][[4]]$wb.ratio))
+		}
+	}
+	#print("-------")
 }

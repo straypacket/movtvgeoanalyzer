@@ -1,6 +1,6 @@
 library('RMySQL')
 library('fpc')
-library('mclust')
+plot(library('mclust')
 library('edci')
 require("geneplotter")
 require("RColorBrewer")
@@ -30,7 +30,8 @@ uid <- "'5eedd0514bbc4c2c7b77903f13dbf95f4693638f'"
 density <- c(0.025)
 timingWD <- c('WD 6-8','WD 8-10','WD 10-12','WD 12-14','WD 14-16','WD 16-18','WD 18-20','WD 20-22','WD 22-24','WD 0-2','WD 2-6')
 timingWE <- c('WE 6-8','WE 8-10','WE 10-12','WE 12-14','WE 14-16','WE 16-18','WE 18-20','WE 20-22','WE 22-24','WE 0-2','WE 2-6')
-tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
+#tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
+tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22),c(2,8))
 statements <- {}
 
 # Build Foursquare tree
@@ -96,7 +97,7 @@ for (i in 1:length(statements)) {
 			# Best for Nico (2754)
 			#plot(d, x, main=timingWD[i], ylim = c(-33.8, -33.3), xlim = c(-71, -70.45))
 			# best for Luis (915)
-			# Kantou
+			# Kanto
 			#plot(d, x, main=paste(timingWD[i],"density",density[den]), xlim = c(139.7, 140.2), ylim = c(35.6, 36.1))
 			# Tokyo
 			#plot(d, x, main=paste(timingWD[i],"density",density[den]), xlim = c(139.7, 139.85), ylim = c(35.6, 35.8))
