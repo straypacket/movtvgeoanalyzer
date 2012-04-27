@@ -97,8 +97,8 @@ for (i in 1:length(statements)) {
 				# Tokyo
 				#plot(d, x, main=paste(timing[i],"density",density[den]), xlim = c(139.7, 139.85), ylim = c(35.6, 35.8))
 
+				print(paste(timing[i],density[den],minPts[pts],max(d$cluster)))
 				if (max(d$cluster)) {
-
 					if (max(d$cluster) > 1){
 						frame <- subset(data.frame(x=datax,y=datay,clus=d$cluster), clus>0)
 						currval <- cluster.stats(dist(subset(frame, select=x:y)), unlist(subset(frame, select=clus), use.names=FALSE), G2=TRUE,G3=TRUE)
