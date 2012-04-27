@@ -30,8 +30,8 @@ uid <- "'5eedd0514bbc4c2c7b77903f13dbf95f4693638f'"
 density <- c(0.025)
 timingWD <- c('WD 6-8','WD 8-10','WD 10-12','WD 12-14','WD 14-16','WD 16-18','WD 18-20','WD 20-22','WD 22-24','WD 0-2','WD 2-6')
 timingWE <- c('WE 6-8','WE 8-10','WE 10-12','WE 12-14','WE 14-16','WE 16-18','WE 18-20','WE 20-22','WE 22-24','WE 0-2','WE 2-6')
-#tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
-tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22),c(2,8))
+tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
+#tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22),c(2,8))
 statements <- {}
 
 # Build Foursquare tree
@@ -52,7 +52,6 @@ for (t in 1:(length(tod)/2)) {
 	"AND EXTRACT(HOUR FROM timeofday) <", tod[2,t],
 	"AND dayofweek >= 1",
 	"AND dayofweek <= 5",
-	"group by longitude, latitude",
 	"ORDER BY timestamp ASC"))
 }
 
@@ -60,9 +59,9 @@ conn <- {}
 for (i in 1:length(statements)) {
 		# Setup graphs
 
-		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.12.37", dbname="qori_analyzer")
+		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.13.44", dbname="qori_analyzer")
 		rso <- dbSendQuery(conn, statements[i])
-		x <- fetch(rso)
+		x <- fetch(rso, n=-1)
 		count <- nrow(x)
 
 		rowCount <- 0
@@ -88,7 +87,7 @@ for (i in 1:length(statements)) {
 	}
 	else{
 		for (den in 1:length(density)) {
-			d <- dbscan(x,eps=density[den], MinPts=5, scale=1, method="raw");
+			d <- dbscan(x,eps=density[den], MinPts=20, scale=1, method="raw");
 			# Caffati (2215)
 			plot(d,x, main=paste(timingWD[i],"density",density[den]), ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 			#plot(x[d$cluster %in% 1:10,], main=timingWD[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
@@ -149,7 +148,7 @@ for (i in 1:length(statements)) {
 						}
 
 						# Infer context
-						print(paste(timingWD[i], "density: ", density[den], " cluster: ", c, " with ", length(finalvenue), " elements @ ", clusCenter[2], "," ,clusCenter[1], sep=""))
+						print(paste(timingWD[i], " density: ", density[den], " cluster: ", c, " of ", length(finalvenue), " with ", sum(d$cluster == c) ," elements @ ", clusCenter[2], "," ,clusCenter[1], sep=""))
 						#sortedctx <- mixedsort(ctx)
 						#print(sortedctx)
 						sortedvenues<- mixedsort(finalvenue)

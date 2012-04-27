@@ -30,7 +30,6 @@ for (t in 1:(length(tod)/2)) {
 	"AND EXTRACT(HOUR FROM timeofday) <", tod[2,t],
 	"AND (dayofweek < 1",
 	"OR dayofweek > 5)",
-	"group by longitude, latitude",
 	"ORDER BY timestamp ASC"))
 }
 
@@ -38,9 +37,9 @@ conn <- {}
 for (i in 1:length(statements)) {
 		# Setup graphs
 
-		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.12.37", dbname="qori_analyzer")
+		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.13.44", dbname="qori_analyzer")
 		rso <- dbSendQuery(conn, statements[i])
-		x <- fetch(rso)
+		x <- fetch(rso,n=-1)
 		count <- nrow(x)
 
 		rowCount <- 0

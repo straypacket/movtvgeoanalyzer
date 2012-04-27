@@ -10,7 +10,7 @@ require 'zlib'
 require 'date'
 
 CONFIG = OpenStruct.new
-CONFIG.host = ENV['MYSQL_HOST'] || '192.168.12.37'
+CONFIG.host = ENV['MYSQL_HOST'] || '192.168.13.44'
 CONFIG.port = ENV['MYSQL_PORT'] || '3306'
 CONFIG.user = ENV['MYSQL_USER'] || 'skillup'
 CONFIG.pass = ENV['MYSQL_PASS'] || 'skillup'

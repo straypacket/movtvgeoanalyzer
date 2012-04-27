@@ -18,7 +18,7 @@ lay <- layout(matrix(1:50, ncol=10, byrow=TRUE))
 
 uid <- "'5eedd0514bbc4c2c7b77903f13dbf95f4693638f'"
 density <- c(0.005, 0.010, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 1.0)
-minPts <- c(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+minPts <- c(5, 10, 15, 20, 25, 30, 35, 45, 50, 55, 60, 65, 70)
 timing <- c('WD_6-8','WD_8-10','WD_10-12','WD_12-14','WD_14-16','WD_16-18','WD_18-20','WD_20-22','WD_22-24','WD_0-2','WD_2-6')
 #timing <- c('WD 12-14','WD 14-16','WD 16-18','WD 18-20','WD 20-22')
 tod <- array(c(6,8,8,10,10,12,12,14,14,16,16,18,18,20,20,22,22,24,0,2),c(2,10))
@@ -34,7 +34,6 @@ for (t in 1:(length(tod)/2)) {
 	"AND EXTRACT(HOUR FROM timeofday) <", tod[2,t],
 	"AND dayofweek >= 1",
 	"AND dayofweek <= 5",
-	"group by longitude, latitude",
 	"ORDER BY timestamp ASC"))
 }
 
@@ -46,9 +45,9 @@ acounter <- 1
 for (i in 1:length(statements)) {
 		# Setup graphs
 
-		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.12.37", dbname="qori_analyzer")
+		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.13.44", dbname="qori_analyzer")
 		rso <- dbSendQuery(conn, statements[i])
-		x <- fetch(rso)
+		x <- fetch(rso,n=-1)
 		count <- nrow(x)
 
 		rowCount <- 0
@@ -84,7 +83,7 @@ for (i in 1:length(statements)) {
 				# safe
 				#d <- dbscan(x,eps=0.1, MinPts=5, scale=1);
 				d <- dbscan(x,eps=density[den], MinPts=minPts[pts], scale=1, method="raw");
-				plot(d,x, main=paste(timing[i],"minPTS",minPts[pts]), ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+				#plot(d,x, main=paste(timing[i],"minPTS",minPts[pts],"density",density[den]), ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 				#plot(x[d$cluster %in% 1:10,], main=timing[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 				# Santiago + Vina del mar
 				#plot(d, x, main=timing[i], ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))

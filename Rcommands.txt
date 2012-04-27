@@ -15,3 +15,7 @@ ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text(hjust=0, 
 ggplot(frame, aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d() + geom_point(stat="unique")
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d(aes(fill = ..level..), geom="polygon") + geom_point(stat="unique")
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + stat_bin2d(binwidth = c(0.005, 0.005)) + geom_text(hjust=0, vjust=0) + geom_point(stat="unique")
+
+Time distribution of events
+events <- strftime(x$time, format="%H")
+qplot(events, data=x, geom="histogram", xlab="Hour", ylab="Number of events") + geom_histogram(aes(fill = ..count..)) + scale_fill_gradient("Events", low = "blue", high = "red")

@@ -48,7 +48,7 @@ public void setup() {
   String database = "qori_analyzer";
 
   // get data
-  msql = new MySQL( this, "192.168.12.37", database, user, pass );
+  msql = new MySQL( this, "192.168.13.44", database, user, pass );
   loadGeoData();
   
   map = new de.fhpotsdam.unfolding.Map(this);
@@ -128,27 +128,33 @@ public void draw() {
 }
 
 private void loadGeoData() {
-  //Christian
+  //Alguien en Puerto Montt (882)
+  //String uid = "55594a97e86d3f4b4ee6b911b59d98e63f2e23a9";
+  //Alguien entre Vina y Santiago (1106)
+  //String uid = "4971cb80f69290e1c79a1ed49016ffeab0748e60";
+  //Alguien de SUC (2407)
+  //String uid = "c4874c2b8910c25d9e5d8e181a6ef3cfe852b7f5";
+  //Christian (2215)
   String uid = "5eedd0514bbc4c2c7b77903f13dbf95f4693638f";
-  //Nico
+  //Nico (2754)
   //String uid = "b0195e18ee9244b78b25d2bf438afd4311041f50";
-  //Flight attendant
+  //Flight attendant (503)
   //String uid = "6401578e8592675605a79d8e6f79c79dd1383b2c";
-  //Chino
+  //Chino (417)
   //String uid = "ba7ece3b98db0b8df018ae9e0e84f332bb19a4ee";
-  //Luis (4S)
+  //Luis (4S) (915)
   //String uid = "6f01a0f212db893eca84e8ced20a81b44798031f";
-  //Luis (3GS)
+  //Luis (3GS) (3257)
   //String uid = "fa556bbcd8b22d340f92173b121e3ce3e81cafc2";
-  //Teppei?
+  //Teppei? (360)
   //String uid = "84b1ccf1d56bf0e70fe2720a623eec7c90b59441";
-  //Daniel
+  //Daniel (337)
   //String uid = "0f25716871b389a9700d3be2f0abd465608281fa";
-  //Swedish
+  //Swedish (301)
   //String uid = "9bce63fa4ec360f9f9ecc93a5632574d2cf6888f";
-  //Chilean-Mexican
+  //Chilean-Mexican (243)
   //String uid = "716a273bc78882f53e8b1ce8c69653c515e80065";
-  //Spanish
+  //Spanish (197)
   //String uid = "503fd8681433cbef13a9dbf0b8b273ea03c44698";
   //Another Swedish!
   //String uid = "908a0affbd759fc5ad340b663973e52bef26c448";
@@ -158,13 +164,13 @@ private void loadGeoData() {
   //String uid = "45045A0A-FCF9-5733-86EC-98D4BBC363D4";
   //La Serena/Coquimbo
   //String uid = "9e7456ac8a9b3d0bd6026df1f18965c2e5d0db46";
-  //Coquimbo/Calama
+  //Coquimbo/Calama (503)
   //String uid = "6401578e8592675605a79d8e6f79c79dd1383b2c";
   
   movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
-    //msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' group by longitude, latitude ORDER BY timestamp ASC LIMIT 100" );
-    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' group by longitude, latitude ORDER BY timestamp ASC LIMIT 500" );
+    //msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' ORDER BY timestamp ASC LIMIT 100" );
+    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' ORDER BY timestamp ASC LIMIT 500" );
     while ( msql.next() ){
       //println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getString("date") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );

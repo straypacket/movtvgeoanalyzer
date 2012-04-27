@@ -223,6 +223,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"crawler",
+			"treeArray"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -240,7 +242,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -255,8 +257,8 @@
 						"selection":
 						[
 							[
-								3768,
-								3774
+								5845,
+								5845
 							]
 						],
 						"settings":
@@ -282,16 +284,17 @@
 						"selection":
 						[
 							[
-								2263,
-								2263
+								2831,
+								2831
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/R/R.tmLanguage"
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1003.0,
+						"translation.y": 745.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -308,8 +311,8 @@
 						"selection":
 						[
 							[
-								4509,
-								4509
+								0,
+								5611
 							]
 						],
 						"settings":
@@ -318,7 +321,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1769.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

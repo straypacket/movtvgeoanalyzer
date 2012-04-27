@@ -27,16 +27,15 @@ statements <- append(statements, paste(
 	#"AND EXTRACT(HOUR FROM timeofday) < 20",
 	"AND dayofweek >= 1",
 	"AND dayofweek <= 5",
-	"group by longitude, latitude",
 	"ORDER BY timestamp ASC"))
 
 conn <- {}
 for (i in 1:length(statements)) {
 		# Setup graphs
 
-		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.12.37", dbname="qori_analyzer")
+		conn <- dbConnect(MySQL(), user="skillup", password="skillup", host="192.168.13.44", dbname="qori_analyzer")
 		rso <- dbSendQuery(conn, statements[i])
-		x <- fetch(rso)
+		x <- fetch(rso,n=-1)
 		count <- nrow(x)
 
 		rowCount <- 0
@@ -81,17 +80,17 @@ for (i in 1:length(statements)) {
 
 		# Best for Caffati (2215)
 		# safe
-		#d <- dbscan(x,eps=0.1, MinPts=5, scale=1);
-		d <- dbscan(x,eps=0.1, MinPts=5, scale=1, method="raw");
+		#d <- dbscan(x,eps=0.1, MinPts=4, scale=1);
+		d <- dbscan(x,eps=0.1, MinPts=4, scale=1, method="raw");
 		plot(d,x, main="Density-based", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 		#plot(x[d$cluster %in% 1:10,], main=timing[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 		# Santiago + Vina del mar
 		#plot(d, x, main="Density-based", ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))
 		# Best for Nico (2754)
-		#d <- dbscan(x,eps=0.025, MinPts=5, scale=1);
+		#d <- dbscan(x,eps=0.025, MinPts=4, scale=1);
 		#plot(d, x, main=timing[i], ylim = c(-33.8, -33.3), xlim = c(-71, -70.45))
 		# best for Luis (915)
-		#d <- dbscan(x,eps=0.8, MinPts=5, scale=1);
+		#d <- dbscan(x,eps=0.8, MinPts=4, scale=1);
 		#plot(d, x, main=timing[i], xlim = c(139.7, 140.2), ylim = c(35.6, 36.1));
 
 		###
