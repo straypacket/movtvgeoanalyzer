@@ -170,7 +170,7 @@ private void loadGeoData() {
   movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
     //msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' ORDER BY timestamp ASC LIMIT 100" );
-    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' ORDER BY timestamp ASC LIMIT 500" );
+    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' ORDER BY timestamp ASC LIMIT 5000" );
     while ( msql.next() ){
       //println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getString("date") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );
@@ -189,7 +189,7 @@ private void pointWalk() {
   for (Location location : movTVGeoLocations) {
     float xy[] = map.getScreenPositionFromLocation(location);
     //seq.beginStep();
-    seq.add(Ani.to(this, 0.85, "x:"+xy[0]+",y:"+xy[1]));
+    seq.add(Ani.to(this, 0.05, "x:"+xy[0]+",y:"+xy[1]));
     //seq.endStep();
   }
   seq.endSequence();

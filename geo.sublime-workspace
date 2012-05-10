@@ -115,7 +115,15 @@
 			"file": "geoAnalyzer.R",
 			"settings":
 			{
-				"buffer_size": 5873,
+				"buffer_size": 5877,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "geoTimeCluster.R",
+			"settings":
+			{
+				"buffer_size": 1195,
 				"line_ending": "Unix"
 			}
 		},
@@ -123,7 +131,7 @@
 			"file": "geoAnalyzerAll.R",
 			"settings":
 			{
-				"buffer_size": 4878,
+				"buffer_size": 4850,
 				"line_ending": "Unix"
 			}
 		},
@@ -131,7 +139,7 @@
 			"file": "geoAnalyzerMinPTSDensityTime.R",
 			"settings":
 			{
-				"buffer_size": 5611,
+				"buffer_size": 5738,
 				"line_ending": "Unix"
 			}
 		},
@@ -139,7 +147,7 @@
 			"file": "geoAnalyzerMinPTSTime.R",
 			"settings":
 			{
-				"buffer_size": 4685,
+				"buffer_size": 4657,
 				"line_ending": "Unix"
 			}
 		},
@@ -147,7 +155,7 @@
 			"file": "geoAnalyzerDensityTime.R",
 			"settings":
 			{
-				"buffer_size": 4351,
+				"buffer_size": 4323,
 				"line_ending": "Unix"
 			}
 		},
@@ -155,7 +163,7 @@
 			"file": "geoAnalyzerDensityTimeWE.R",
 			"settings":
 			{
-				"buffer_size": 2844,
+				"buffer_size": 2816,
 				"line_ending": "Unix"
 			}
 		},
@@ -223,6 +231,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"50",
+			"cra",
 			"crawler",
 			"treeArray"
 		],
@@ -242,7 +252,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -250,15 +260,15 @@
 					"file": "geoAnalyzer.R",
 					"settings":
 					{
-						"buffer_size": 5873,
+						"buffer_size": 5877,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5845,
-								5845
+								2611,
+								2611
 							]
 						],
 						"settings":
@@ -267,25 +277,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1604.0,
+						"translation.y": 397.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "geoAnalyzerAll.R",
+					"file": "geoTimeCluster.R",
 					"settings":
 					{
-						"buffer_size": 4878,
+						"buffer_size": 1195,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2831,
-								2831
+								740,
+								760
 							]
 						],
 						"settings":
@@ -294,25 +304,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 745.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "geoAnalyzerMinPTSDensityTime.R",
+					"file": "geoAnalyzerAll.R",
 					"settings":
 					{
-						"buffer_size": 5611,
+						"buffer_size": 4850,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								5611
+								919,
+								919
 							]
 						],
 						"settings":
@@ -328,10 +338,10 @@
 				},
 				{
 					"buffer": 3,
-					"file": "geoAnalyzerMinPTSTime.R",
+					"file": "geoAnalyzerMinPTSDensityTime.R",
 					"settings":
 					{
-						"buffer_size": 4685,
+						"buffer_size": 5738,
 						"regions":
 						{
 						},
@@ -339,7 +349,7 @@
 						[
 							[
 								0,
-								0
+								5738
 							]
 						],
 						"settings":
@@ -348,25 +358,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 625.0,
+						"translation.y": 108.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "geoAnalyzerDensityTime.R",
+					"file": "geoAnalyzerMinPTSTime.R",
 					"settings":
 					{
-						"buffer_size": 4351,
+						"buffer_size": 4657,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1943,
-								1966
+								425,
+								381
 							]
 						],
 						"settings":
@@ -382,18 +392,18 @@
 				},
 				{
 					"buffer": 5,
-					"file": "geoAnalyzerDensityTimeWE.R",
+					"file": "geoAnalyzerDensityTime.R",
 					"settings":
 					{
-						"buffer_size": 2844,
+						"buffer_size": 4323,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								387,
-								406
+								1424,
+								1424
 							]
 						],
 						"settings":
@@ -409,6 +419,33 @@
 				},
 				{
 					"buffer": 6,
+					"file": "geoAnalyzerDensityTimeWE.R",
+					"settings":
+					{
+						"buffer_size": 2816,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1190,
+								1190
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "qori_log_extractor.rb",
 					"settings":
 					{
@@ -419,8 +456,8 @@
 						"selection":
 						[
 							[
-								2328,
-								2328
+								312,
+								312
 							]
 						],
 						"settings":
@@ -429,7 +466,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1390.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
