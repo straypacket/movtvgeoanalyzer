@@ -3,9 +3,10 @@ RMongoDB
 library("rmongodb")
 
 mongo <- mongo.create()
-mongo.insert(mongo, "test.people", list(name="John", age=34L, address="1033 Vine Street"))
+mongo.insert(mongo, "test.people", list(name="John", age=34L, address="1033 Vine Street", loc=c(20, 10)))
 
 cursor <- mongo.find(mongo, "test.people", list(age=34))
+cursor <- mongo.find(mongo, "test.people", list(loc=list("$near"=c(20,5), "$maxDistance"=10))
 
 while (mongo.cursor.next(cursor))
   print(mongo.cursor.value(cursor))
