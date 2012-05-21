@@ -41,6 +41,7 @@ for (t in 1:(length(tod)/2)) {
 conn <- {}
 cv <- array(list(),c(500,4))
 acounter <- 1
+facet_frame <- {}
 for (i in 1:length(statements)) {
 		# Setup graphs
 
@@ -78,14 +79,15 @@ for (i in 1:length(statements)) {
 			# Best for Caffati (2215)
 			# safe
 			#d <- dbscan(x,eps=0.1, MinPts=5, scale=1);
-			d <- dbscan(x,eps=density[den], MinPts=5, scale=1, method="raw");
-			plot(d,x, main=paste(abc[i],timing[i]), ylab = "Latitude", xlab = "Longitude", cex=1.5, ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))
-			if (length(unique(d$cluster))-1) {
-				legend("bottomleft", inset=.05, title="Clusters", legend=seq(1,length(unique(d$cluster))-1), fill=head(tail(palette(), n=-1), n=length(unique(d$cluster))-1), horiz=TRUE)
-			}
-			else{
-				legend("bottomleft", inset=.05, title="Clusters", legend="No clusters found", n=1, horiz=TRUE)
-			}
+			d <- dbscan(x,eps=density[den], MinPts=5, scale=1, method="raw")
+			facet_frame <- rbind(facet_frame,data.frame(x=datax,y=datay,clus=d$cluster,time=timing[i]))	
+			#plot(d,x, main=paste(abc[i],timing[i]), ylab = "Latitude", xlab = "Longitude", cex=1.5, ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))
+			#if (length(unique(d$cluster))-1) {
+			#	legend("bottomleft", inset=.05, title="Clusters", legend=seq(1,length(unique(d$cluster))-1), fill=head(tail(palette(), n=-1), n=length(unique(d$cluster))-1), horiz=TRUE)
+			#}
+			#else{
+			#	legend("bottomleft", inset=.05, title="Clusters", legend="No clusters found", n=1, horiz=TRUE)
+			#}
 			#plot(x[d$cluster %in% 1:10,], main=timing[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 			# Santiago + Vina del mar
 			#plot(d, x, main=timing[i], ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))
@@ -127,6 +129,8 @@ for (i in 1:length(statements)) {
 			}
 		}
 	}
+	ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 4.5) + geom_point(colour="pink", size = 4) + geom_point(aes(shape = factor(clus), alpha = factor(clus)))
+	#ggplot(facet_frame, aes(x=x, y=y)) + stat_binhex() + facet_wrap(~ time, ncol=2)
 }
 
 # Cluster Analyze/graph:
