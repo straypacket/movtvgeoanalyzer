@@ -129,7 +129,7 @@ for (i in 1:length(statements)) {
 		}
 	}
 }
-ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 4.5) + geom_point(colour="pink", size = 4) + geom_point(aes(shape = factor(clus), alpha = factor(clus)))
+ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 4.5) + geom_point(colour="pink", size = 4) + geom_point(aes(shape = factor(clus), alpha = factor(clus))) + ylab("Latitude") + xlab("Longitude") + labs(shape="Cluster", alpha="Cluster") + opts(axis.text.x = theme_text(angle = 340, colour = "grey50"))
 #ggplot(facet_frame, aes(x=x, y=y)) + stat_binhex() + facet_wrap(~ time, ncol=2)
 
 # Cluster Analyze/graph:
