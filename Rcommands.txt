@@ -12,10 +12,14 @@ while (mongo.cursor.next(cursor))
   print(mongo.cursor.value(cursor))
 
 Output:
-	_id : 7 	 4fab8708f2c330f691fc1971
+	_id : 7 	 4fab9691f2c330f691fc1975
 	name : 2 	 John
 	age : 16 	 34
 	address : 2 	 1033 Vine Street
+	loc : 4 	 
+		0 : 1 	 20.000000
+		1 : 1 	 10.000000
+
 
 
 Cluster validation:
@@ -28,13 +32,21 @@ library(ggplot2)
 ggplot(subset(frame, clus > 0), aes(x=x, y=y)) + geom_point(aes(shape = factor(clus)),, size = 4) + scale_shape(solid = FALSE) + stat_bin2d(bins = 25, colour="grey50") + geom_smooth()
 
 Graphs by cluster ID
-frame <- data.frame(x=datax,y=datay,clus=d$cluster)
+frame <- data.frame(x=datax,y=datay,clus=d$cluster,time=timing[i])
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text()
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text() + stat_density2d(geom="density2d")
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d() + geom_point(stat="unique")
 ggplot(frame, aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d() + geom_point(stat="unique")
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + geom_text(hjust=0, vjust=0) + stat_density2d(aes(fill = ..level..), geom="polygon") + geom_point(stat="unique")
 ggplot(subset(frame, clus > 0), aes(x=x, y=y, label=clus)) + stat_bin2d(binwidth = c(0.005, 0.005)) + geom_text(hjust=0, vjust=0) + geom_point(stat="unique")
+
+ggplot(frame, aes(x=datax, y=datay)) + geom_point(aes(shape=factor(clus),colour=factor(clus)), size=4)
+
+ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 4.5) + geom_point(colour="pink", size = 4) + geom_point(aes(shape = factor(clus)))
+
+!!!!
+ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 4.5) + geom_point(colour="pink", size = 4) + geom_point(aes(shape = factor(clus), alpha = factor(clus)))
+!!!!
 
 Time distribution of events
 events <- strftime(x$time, format="%H")
