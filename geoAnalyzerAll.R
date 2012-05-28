@@ -5,17 +5,17 @@ library('edci')
 require("geneplotter")
 require("RColorBrewer")
 require("class")
-require("hdrcde")
+#require("hdrcde")
 
 #if (!"package:misc3d" %in% search()) {
 #  Sys.sleep(15)
 #}
 
 # Setup graphs
-lay <- layout(matrix(1:10, ncol=5, byrow=TRUE))
+lay <- layout(matrix(1:6, ncol=2, byrow=TRUE))
 #op <- par(mar=rep(1,4), ask = FALSE)
 
-K <- 2
+K <- 3
 statements <- {}
 
 # Week days 14-20
@@ -27,6 +27,7 @@ statements <- append(statements, paste(
 	#"AND EXTRACT(HOUR FROM timeofday) < 20",
 	"AND dayofweek >= 1",
 	"AND dayofweek <= 5",
+	"GROUP BY longitude, latitude",
 	"ORDER BY timestamp ASC"))
 
 conn <- {}
@@ -62,18 +63,18 @@ for (i in 1:length(statements)) {
 		# Scatterplots with smoothed densities color representation
 		###
 		#smoothScatter(x, nrpoints=0)
-		smoothScatter(x, main="Smooth Scatter", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		#smoothScatter(x, main="Smooth Scatter", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 		#smoothScatter(x, nrpoints=Inf, colramp=colorRampPalette(brewer.pal(9,"YlOrRd")), bandwidth=0.025)
 		###
 		# Normal points
 		###
-		colors <- densCols(x)
-		plot(x, col=colors, pch=20, main="Density colored points", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		#colors <- densCols(x)
+		#plot(x, col=colors, pch=20, main="a) density colored points", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		###
 		# Bivariate Highest density regions
 		###
 		#plot(datax,datay, pch="+", cex=.5)
-		hdr.boxplot.2d(datax,datay, main="Bivariate density regions", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		#hdr.boxplot.2d(datax,datay, main="Bivariate density regions", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 		###
 		# Density-based clustering (DBSCAN)
 		###
@@ -81,8 +82,9 @@ for (i in 1:length(statements)) {
 		# Best for Caffati (2215)
 		# safe
 		#d <- dbscan(x,eps=0.1, MinPts=4, scale=1);
-		d <- dbscan(x,eps=0.1, MinPts=4, scale=1, method="raw");
-		plot(d,x, main="Density-based", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		d <- dbscan(x,eps=0.1, MinPts=10, scale=1, method="raw");
+		plot(d,x, main="a) density-based clustering (Eps=0.1, MinPts=10)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=tail(palette(), n=-1), horiz=TRUE)
 		#plot(x[d$cluster %in% 1:10,], main=timing[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 		# Santiago + Vina del mar
 		#plot(d, x, main="Density-based", ylim = c(-33.55, -32.9), xlim = c(-71.6, -70.5))
@@ -97,34 +99,72 @@ for (i in 1:length(statements)) {
 		# K-means (k=K)
 		###
 		kclus <- kmeans(x, K)
-		plot(x, col = kclus$cluster, main="K-Means (k=K)", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
-		points(kclus$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		plot(x, col = kclus$cluster, main="b) k-means clustering (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		#points(kclus$centers, col = 1:2, pch = 8, cex=2, ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
 		###
 		# Hierachical cluster
 		###
 		hc <- hclust(dist(x), "ave")
 		#hc <- hclust(dist(x)^2, "ave")
-		plot(hc, main="Hierarchical cluster dendrogram")
+		#plot(hc, main="Hierarchical cluster dendrogram")
+		#plot(cutree(hc, k=7)) # What's a good K?! ;)
+
+		chc <- cut(as.dendrogram(hc), h=0.02)$upper
+		newLabels <- paste("Cluster", 1:22, sep=" ")
+		local({
+			newLab <<- function(n) {
+		        if(is.leaf(n)) {
+		          	a <- attributes(n)
+		          	i <<- i+1
+		          	attr(n, "label") <- newLabels[i]
+		        }
+		        n
+			}
+			i <- 0
+		})
+		nhc <- dendrapply(chc, newLab)
+		plot(nhc, main="c) hierarchical cluster (cut at 0.02)")
+
+		#chc <- cut(as.dendrogram(hc), h=0.02)$upper
+		#newLabels <- paste("Cluster", 1:22, sep=" ")
+		#local({
+		#	newLab <<- function(n) {
+		#        if(is.leaf(n)) {
+		#          	a <- attributes(n)
+		#          	i <<- i+1
+		#          	attr(n, "label") <- newLabels[i]
+		#        }
+		#        n
+		#	}
+		#	i <- 0
+		#})
+		#nhc <- dendrapply(chc, newLab)
+		#plot(nhc, main="d) hierarchical cluster (cut at 0.02)")
+
 		###
 		# Fanny (fuzzy logic, k=K)
 		###
 		fanny <- fanny(x,K)
-		plot(x, col=fanny$clustering, main="FANNY (Fuzzy-logic based (k=K))", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
-		points(fanny$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		plot(x, col=fanny$clustering, main="d) fuzzy-logic clustering (FANNY) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		#points(fanny$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
 		#plot(fanny, which = 1)
 		###
 		# Fuzzy Cmeans (k=K)
 		###
-		library(e1071)
-		cm <- cmeans(x,K)
-		plot(x, col=cm$cluster, main="Cmeans (Fuzzy-logic based (k=K))", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
-		points(cm$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		#library(e1071)
+		#cm <- cmeans(x,K)
+		#plot(x, col=cm$cluster, main="f) fuzzy-logic clustering (C-means) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		#points(cm$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		#legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
 		###
 		# Fuzzy Cshell (k=K)
 		###
 		cs <- cshell(x,K)
-		plot(x, col=cs$cluster, main="Cshell (Fuzzy-logic based (k=K))", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
-		points(cs$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		plot(x, col=cs$cluster, main="e) fuzzy-logic clustering (C-shell) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		#points(cs$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
 		###
 		# Model-Based Clustering
 		###
@@ -142,6 +182,6 @@ for (i in 1:length(statements)) {
 		#plot(b,datax,datay, main="Circular Clustering (Bandwidth=0.29)")
 		# changing between 0.35 and 0.39 gives too many different results!
 		b <- oregMclust(datax,datay,0.38)
-		plot(b,datax,datay, main="Orthogonal Regression Clustering (Bandwidth=0.38)", ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
+		plot(b,datax,datay, main="f) orthogonal regression clustering (Bandwidth=0.38)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 	}
 }

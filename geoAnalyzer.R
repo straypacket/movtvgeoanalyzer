@@ -9,6 +9,7 @@ require("hdrcde")
 library("RCurl")
 library("rjson")
 library("gtools")
+library("rmongodb")
 
 crawler <- function(tree, name, d) {
 	treeArray[tree$shortName] <<- name
@@ -42,6 +43,9 @@ treeArray <- {}
 for (sc in 1:length(FSTree$response$categories)) {
 	crawler(FSTree$response$categories[[sc]], FSTree$response$categories[[sc]]$shortName)
 }
+
+# Connect to MongoDB
+mongo <- mongo.create()
 
 for (t in 1:(length(tod)/2)) {
 	statements <- append(statements, paste(
@@ -111,10 +115,12 @@ for (i in 1:length(statements)) {
 					Uctx <- getURL(paste("https://api.foursquare.com/v2/venues/search?ll=",clusCenter[2],",",clusCenter[1],"&oauth_token=ADB02WREAK4W4R5BDYBVEXHWB14VZM4TQOIWZCYAD1GY22EK&v=20120410&radius=",radius,"&intent=browse", sep=""))
 					# Twitter
 					#Uctx <- getURL(paste("http://search.twitter.com/search.json?q=@foursquare&geocode=",clusCenter[2],",",clusCenter[1],"0.50km&rpp=100&result_type=recent", sep=""))
-					# Facebook + NLP
+					# Facebook + NLP?
 					#https://graph.facebook.com/search?q=ofi&type=place&center=-33.39,-70.5466333333333&distance=250&access_token=AAAAAAITEghMBANyEQtKaNcp4BIJBPTixFR3dtNySpOvlFaYRZCnlL9ZBtn7ILYszpZB4OJGGhLYsqgxVaapFlF3uvZBzFxV7cXGbdkej0wZDZD
 					#https://graph.facebook.com/search?q=rest&type=place&center=-33.39,-70.5466333333333&distance=250&access_token=AAAAAAITEghMBANyEQtKaNcp4BIJBPTixFR3dtNySpOvlFaYRZCnlL9ZBtn7ILYszpZB4OJGGhLYsqgxVaapFlF3uvZBzFxV7cXGbdkej0wZDZD
 					#https://graph.facebook.com/search?q=casa&type=place&center=-33.39,-70.5466333333333&distance=250&access_token=AAAAAAITEghMBANyEQtKaNcp4BIJBPTixFR3dtNySpOvlFaYRZCnlL9ZBtn7ILYszpZB4OJGGhLYsqgxVaapFlF3uvZBzFxV7cXGbdkej0wZDZD
+					# Google Places
+					#https://maps.googleapis.com/maps/api/place/search/json?location=-33.39,-70.5466333333333&radius=250&sensor=false&key=AIzaSyCSQCjmllk7W-e2WaVbBHADeBmunOMj66w
 
 					# Convert JSON to R-object
 					Rctx <- fromJSON(Uctx,method = "C")
@@ -152,6 +158,9 @@ for (i in 1:length(statements)) {
 						#sortedctx <- mixedsort(ctx)
 						#print(sortedctx)
 						sortedvenues<- mixedsort(finalvenue)
+						for (sv in 1:length(sortedvenues)) {
+							mongo.insert(mongo, "test.people", list(name=uid, category=names(sortedvenues[sv]), qty=matrix(sortedvenues)[sv], timeslot=timingWD[i], clusterpoints=sum(d$cluster == c), loc=c(clusCenter[2], clusCenter[1])))
+						}
 						print(tail(sortedvenues,2))
 					}
 				}

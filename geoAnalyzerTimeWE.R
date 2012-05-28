@@ -7,6 +7,7 @@ require("geneplotter")
 require("RColorBrewer")
 require("class")
 require("hdrcde")
+require("ggplot2")
 
 #if (!"package:misc3d" %in% search()) {
 #  Sys.sleep(15)
@@ -130,7 +131,7 @@ for (i in 1:length(statements)) {
 		}
 	}
 }
-ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 4.5) + geom_point(colour="pink", size = 4) + geom_point(aes(shape = factor(clus), alpha = factor(clus))) + ylab("Latitude") + xlab("Longitude") + labs(shape="Cluster", alpha="Cluster") + opts(axis.text.x = theme_text(angle = 340, colour = "grey50"))
+ggplot(facet_frame, aes(x=x, y=y)) + facet_wrap(~ time, ncol=2) + geom_point(colour="black", size = 6.5) + geom_point(colour="pink", size = 6) + geom_point(aes(shape = factor(clus), alpha = clus), size = 4) + ylab("Latitude") + xlab("Longitude") + labs(shape="Cluster", alpha="Cluster", colour="Cluster") + opts(axis.text.x = theme_text(angle = 340, colour = "grey50")) + scale_alpha(breaks=c(0,3,3,3),labels=c("Outliar","1","2","3")) + scale_shape(labels=c("Outliar","1","2","3"))
 #ggplot(facet_frame, aes(x=x, y=y)) + stat_binhex() + facet_wrap(~ time, ncol=2)
 
 # Cluster Analyze/graph:
