@@ -170,7 +170,8 @@ private void loadGeoData() {
   movTVGeoLocations = new ArrayList<Location>();
   if ( msql.connect() ) {
     //msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' AND latitude > '-71' AND latitude < '-70' AND longitude > '-34' AND longitude < '-33' ORDER BY timestamp ASC LIMIT 100" );
-    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' ORDER BY timestamp ASC LIMIT 5000" );
+    //msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' ORDER BY timestamp DESC LIMIT 50" );
+    msql.query( "SELECT id,uid,event,timestamp,FROM_UNIXTIME(timestamp) AS date,longitude,latitude FROM reports WHERE uid LIKE '"+uid+"' AND EXTRACT(HOUR FROM timeofday) >= 14 AND EXTRACT(HOUR FROM timeofday) < 16 AND dayofweek >= 1 AND dayofweek <= 5 ORDER BY RAND() DESC LIMIT 500");
     while ( msql.next() ){
       //println( "id:" + msql.getInt("id") + " uid:" + msql.getString("uid") + " time:" + msql.getString("date") + " longitude:" + msql.getFloat("longitude") + " latitude:" + msql.getFloat("latitude"));
       movTVGeoLocations.add( new Location(msql.getFloat("longitude"), msql.getFloat("latitude")) );

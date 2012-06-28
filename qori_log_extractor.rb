@@ -86,7 +86,12 @@ def extract_loop()
 		split_array = ""
 		pec = false
 
-		log.each_line do |line|
+####
+# Map
+####
+
+		log.each_line do |line
+
 			# Pre-parser
 			# This initial code will group all lines until two empty lines are found
 
@@ -139,7 +144,9 @@ def extract_loop()
 					if timestamp.to_i < 0
 						timestamp = (2**31 + timestamp.to_i).to_s
 					end
-
+####
+# Reduce
+####
 					# write into db
 					db_write(uid,event,timestamp,timeofday,dayofweek,split_geo_array[1],split_geo_array[2])
 				end
