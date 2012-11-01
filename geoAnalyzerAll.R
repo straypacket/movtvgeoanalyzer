@@ -2,17 +2,19 @@ library('RMySQL')
 library('fpc')
 library('mclust')
 library('edci')
-require("geneplotter")
+#require("geneplotter")
 require("RColorBrewer")
 require("class")
-#require("hdrcde")
+library('kernlab')
+library('e1071')
+require("hdrcde")
 
 #if (!"package:misc3d" %in% search()) {
 #  Sys.sleep(15)
 #}
 
 # Setup graphs
-lay <- layout(matrix(1:6, ncol=2, byrow=TRUE))
+lay <- layout(matrix(1:8, ncol=2, byrow=TRUE))
 #op <- par(mar=rep(1,4), ask = FALSE)
 
 K <- 3
@@ -55,6 +57,7 @@ for (i in 1:length(statements)) {
 		dbDisconnect(conn)
 
 	x <- cbind(datax,datay)
+
 	if(is.null(x)){
 		plot(c(0,0), c(0,0), main=timing[i], ylim = c(-33.50, -33.32), xlim = c(-70.65, -70.50))
 	}
@@ -96,22 +99,38 @@ for (i in 1:length(statements)) {
 		#plot(d, x, main=timing[i], xlim = c(139.7, 140.2), ylim = c(35.6, 36.1));
 
 		###
+		# Spectral clustering
+		###
+		#s <- specc(x,length(unique(d$cluster)))
+		s <- specc(x,K)
+		plot(x,col=s,main="b) spectral clustering", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		legend("bottomright", inset=.05, title="Clusters", c("0","1","2"), fill=palette(), horiz=TRUE)
+		
+		###
 		# K-means (k=K)
 		###
 		kclus <- kmeans(x, K)
-		plot(x, col = kclus$cluster, main="b) k-means clustering (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		plot(x, col = kclus$cluster, main="c) k-means clustering (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		#points(kclus$centers, col = 1:2, pch = 8, cex=2, ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
+
 		###
 		# Hierachical cluster
 		###
+
+	    #def.par <- par(no.readonly = TRUE)
+    	#on.exit(par(def.par))
+
+    	#par(mar = c(3, 0.3, 1, 0.5))
+    	#par(oma = rep(1,2))
+
+		hcut <- 0.02
 		hc <- hclust(dist(x), "ave")
 		#hc <- hclust(dist(x)^2, "ave")
 		#plot(hc, main="Hierarchical cluster dendrogram")
 		#plot(cutree(hc, k=7)) # What's a good K?! ;)
 
-		chc <- cut(as.dendrogram(hc), h=0.02)$upper
-		newLabels <- paste("Cluster", 1:22, sep=" ")
+		newLabels <- paste("Cluster", 1:12, sep=" ")
 		local({
 			newLab <<- function(n) {
 		        if(is.leaf(n)) {
@@ -123,8 +142,21 @@ for (i in 1:length(statements)) {
 			}
 			i <- 0
 		})
+		chc <- cut(dend, h=hcut)$upper
 		nhc <- dendrapply(chc, newLab)
-		plot(nhc, main="c) hierarchical cluster (cut at 0.02)")
+		plot(nhc, main="d) hierarchical cluster (cut at 0.02)",horiz=TRUE)
+
+		dend <- as.dendrogram(hc)
+		ngrp <- length(cut(dend,hcut)$lower)
+		groupes <- cutree(hc,h=hcut)
+		ttab <- table(groupes)
+		colorsnames <- brewer.pal(ngrp,"Dark2")
+
+		abline(v=hcut,col="red")
+	    text(x=hcut,y=length(hc$height),labels=as.character(round(hcut,3)),col="red",pos=4)
+
+		bplot <- barplot(as.vector(rev(ttab)),horiz=TRUE,space=0,col=rev(colorsnames),xlim=c(0,max(ttab)+10),axes=FALSE,main="Groups",axisnames=FALSE)
+		text(rev(ttab),bplot,as.character(rev(ttab)),col=rev(colorsnames),cex=1.2,pos=4)
 
 		#chc <- cut(as.dendrogram(hc), h=0.02)$upper
 		#newLabels <- paste("Cluster", 1:22, sep=" ")
@@ -146,7 +178,7 @@ for (i in 1:length(statements)) {
 		# Fanny (fuzzy logic, k=K)
 		###
 		fanny <- fanny(x,K)
-		plot(x, col=fanny$clustering, main="d) fuzzy-logic clustering (FANNY) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		plot(x, col=fanny$clustering, main="e) fuzzy-logic clustering (FANNY) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		#points(fanny$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
 		#plot(fanny, which = 1)
@@ -162,7 +194,7 @@ for (i in 1:length(statements)) {
 		# Fuzzy Cshell (k=K)
 		###
 		cs <- cshell(x,K)
-		plot(x, col=cs$cluster, main="e) fuzzy-logic clustering (C-shell) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		plot(x, col=cs$cluster, main="f) fuzzy-logic clustering (C-shell) (k=3)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		#points(cs$centers, col = 1:2, pch = 8, cex=2, ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 		legend("bottomright", inset=.05, title="Clusters", c("1","2","3"), fill=palette(), horiz=TRUE)
 		###
@@ -171,7 +203,7 @@ for (i in 1:length(statements)) {
 		#op <- par()
 		#f <- cbind(datax,datay)
 		#emclust <- Mclust(f)
-		#plot(emclust, f, what = "classification")#, main="Model-Based Clustering")
+		#plot(emclust, f)#, main="g) model-based clustering", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))#, main="Model-Based Clustering")
 		#op$new <- TRUE
 		#par(op)
 		###
@@ -182,6 +214,6 @@ for (i in 1:length(statements)) {
 		#plot(b,datax,datay, main="Circular Clustering (Bandwidth=0.29)")
 		# changing between 0.35 and 0.39 gives too many different results!
 		b <- oregMclust(datax,datay,0.38)
-		plot(b,datax,datay, main="f) orthogonal regression clustering (Bandwidth=0.38)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
+		plot(b,datax,datay, main="h) orthogonal regression clustering (Bandwidth=0.38)", ylab = "Latitude" , xlab = "Longitude", ylim = c(-33.55, -33.3), xlim = c(-70.70, -70.50))
 	}
 }

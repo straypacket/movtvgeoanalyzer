@@ -10,7 +10,7 @@ require 'zlib'
 require 'date'
 
 CONFIG = OpenStruct.new
-CONFIG.host = ENV['MYSQL_HOST'] || '192.168.13.44'
+CONFIG.host = ENV['MYSQL_HOST'] || '127.0.0.1'
 CONFIG.port = ENV['MYSQL_PORT'] || '3306'
 CONFIG.user = ENV['MYSQL_USER'] || 'skillup'
 CONFIG.pass = ENV['MYSQL_PASS'] || 'skillup'
@@ -90,7 +90,7 @@ def extract_loop()
 # Map
 ####
 
-		log.each_line do |line
+		log.each_line do |line|
 
 			# Pre-parser
 			# This initial code will group all lines until two empty lines are found
